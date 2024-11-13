@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void swap(int &x, int &y) {
+    int temp = x;
+    x = y;
+    y = temp;
+}
+
+void minHeapify(vector<int>& heap, int size, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < size && heap[left] < heap[smallest])
+        smallest = left;
+    if (right < size && heap[right] < heap[smallest])
+        smallest = right;
+
+    if (smallest != i) {
+        swap(heap[i], heap[smallest]);
+        minHeapify(heap, size, smallest);
+    }
+}
+
+void buildMinHeap(vector<int>& heap, int size) {
+    for (int i = size / 2 - 1; i >= 0; i--) {
+        minHeapify(heap, size, i);
+    }
+}
+
+void insertElement(vector<int>& heap, int value) {
+    heap.push_back(value);
+    int i = heap.size() - 1;
+    while (i != 0 && heap[(i - 1) / 2] > heap[i]) {
+        swap(heap[i], heap[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+}
+
+void displayMinHeap(const vector<int>& heap) {
+    for (int i = 0; i < heap.size(); i++) {
+        cout << heap[i] << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> heap;
+    for (int i = 0; i < n; i++) {
+        int value;
+        cin >> value;
+        if (value % 5 == 0) {
+            insertElement(heap, value);
+        } else {
+            cout << value << " is not a multiple of five" << endl;
+        }
+    }
+    buildMinHeap(heap, heap.size());
+    displayMinHeap(heap);
+    return 0;
+}
