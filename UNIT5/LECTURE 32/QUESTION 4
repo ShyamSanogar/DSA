@@ -1,0 +1,73 @@
+#include <iostream>
+using namespace std;
+
+void swap(int arr[], int a, int b) {
+    int temp = arr[a];
+    arr[a] = arr[b];
+    arr[b] = temp;
+}
+
+void maxHeapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr, i, largest);
+        maxHeapify(arr, n, largest);
+    }
+}
+
+void buildMaxHeap(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        maxHeapify(arr, n, i);
+    }
+}
+
+void insertIntoMaxHeap(int arr[], int &n, int value, int &evenCount, int &oddCount) {
+    arr[n] = value;
+    n++;
+
+    int i = n - 1;
+    while (i != 0 && arr[(i - 1) / 2] < arr[i]) {
+        swap(arr, i, (i - 1) / 2);
+        i = (i - 1) / 2;
+    }
+
+    if (value % 2 == 0) evenCount++;
+    else oddCount++;
+}
+
+void printMaxHeap(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+}
+
+int main() {
+    int arr[100];
+    int n = 0;
+    int num_elements;
+    int evenCount = 0, oddCount = 0; 
+
+    cin >> num_elements;
+    for (int i = 0; i < num_elements; i++) {
+        int value;
+        cin >> value;
+        insertIntoMaxHeap(arr, n, value, evenCount, oddCount);
+    }
+
+    buildMaxHeap(arr, n);
+    cout << "Max Heap: ";
+    printMaxHeap(arr, n);
+    cout << endl;
+    cout << "Even elements count: " << evenCount << endl;
+    cout << "Odd elements count: " << oddCount << endl;
+
+    return 0;
+}
