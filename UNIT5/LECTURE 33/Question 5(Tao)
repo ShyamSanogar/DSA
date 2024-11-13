@@ -1,0 +1,80 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void swap(int *x, int *y) {
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+void minHeapify(int arr[], int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] < arr[smallest]) {
+        smallest = left;
+    }
+
+    if (right < n && arr[right] < arr[smallest]) {
+        smallest = right;
+    }
+
+    if (smallest != i) {
+        swap(&arr[i], &arr[smallest]);
+        minHeapify(arr, n, smallest);
+    }
+}
+
+void buildMinHeap(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        minHeapify(arr, n, i);
+    }
+}
+
+double calculateAverage(int arr[], int n) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
+    }
+    return static_cast<double>(sum) / n;
+}
+
+int filterElements(int arr[], int* n, double average) {
+    int newSize = 0;
+    for (int i = 0; i < *n; i++) {
+        if (arr[i] >= average) {
+            arr[newSize++] = arr[i];
+        }
+    }
+    *n = newSize;  // Update the size directly using the pointer
+    return *n;  // Return the new size
+}
+
+int main() {
+    int n;
+    cin >> n;
+    
+    int arr[n]; // Array to store elements
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+    
+    buildMinHeap(arr, n);  // Build the initial min-heap
+    
+    double average = calculateAverage(arr, n);
+    
+    cout << "Average: " << fixed << setprecision(2) << average << endl;
+    
+    n = filterElements(arr, &n, average);  // n is updated directly here
+
+    buildMinHeap(arr, n);  // Rebuild the min heap after filtering elements
+
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}
